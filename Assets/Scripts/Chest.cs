@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Chest : MonoBehaviour
 {
+    [SerializeField] private Item[] content;
+
     [SerializeField] private SpriteRenderer[] graphisme;
     [SerializeField] private Sprite[] openSprite;
     [SerializeField] private Sprite[] cloeSprite;
@@ -30,29 +32,31 @@ public class Chest : MonoBehaviour
 
         if(isReatch && _interact > 0)
         {
-            Open();
+            ChanceState(true, openSprite);
         }
         else if (!isReatch)
         {
-            Close();
+            ChanceState(false, cloeSprite);
         }
     }
 
-    private void Open()
+    private void ChanceState(bool _state, Sprite[] _sprites)
     {
-        open = true;
-        for(int i = 0; i < graphisme.Length; i++) // pour chaque sprite renderer
-        {
-            graphisme[i].sprite = openSprite[i];
-        }
-    }
+        open = _state;
+        if(open) EmptyChest();
 
-    private void Close()
-    {
-        open = false;
         for (int i = 0; i < graphisme.Length; i++) // pour chaque sprite renderer
         {
-            graphisme[i].sprite = cloeSprite[i];
+            graphisme[i].sprite = _sprites[i];
+        }
+    }
+
+    private void EmptyChest()
+    {
+        foreach(var _item in content)
+        {
+            CharactersInfoes.AddItem(_item.id, _item.number);
+            _item.number = 0;
         }
     }
 

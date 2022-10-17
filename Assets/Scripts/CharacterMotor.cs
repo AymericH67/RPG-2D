@@ -5,17 +5,16 @@ using UnityEngine.InputSystem;
 
 public class CharacterMotor : MonoBehaviour
 {
+    private int direction = 0;
+    private float speed = 5f;
+
+    private Vector2 velocity = Vector2.zero;
+
     [SerializeField]
     private PlayerInput input;
     private InputAction moveAction;
-
     private Animator anim;
-
     private GameManager manager;
-
-    private Vector2 velocity = Vector2.zero;
-    private int direction = 0;
-    private float speed = 5f;
 
     void Start()
     {
@@ -41,16 +40,7 @@ public class CharacterMotor : MonoBehaviour
 
     private Vector2 ChooseDirection(Vector2 _value)
     {
-        Vector2 _result = Vector2.zero;
-
-        if (Mathf.Abs(_value.x) >= Mathf.Abs(_value.y))
-        {
-            _result = new Vector2(_value.x, 0);
-        }
-        else
-        {
-            _result = new Vector2(0, _value.y);
-        }
+        Vector2 _result = Mathf.Abs(_value.x) >= Mathf.Abs(_value.y) ? new Vector2(_value.x, 0) : new Vector2(0, _value.y);
 
         direction = SetDirection(_result);
         return _result;

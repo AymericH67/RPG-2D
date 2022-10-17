@@ -3,12 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+public enum ItemId
+{
+    Money = 0,
+}
+
+[System.Serializable]
+public class Item
+{
+    [SerializeField]private string name;
+    public ItemId id;
+
+    public int number = 0;
+}
+
 public class CharactersInfoes : MonoBehaviour
 {
     [SerializeField]
     private TextMeshProUGUI moneyTxt;
-    
-    public int moneyCount = 0;
+
+
+    private static  Item[] inventory;
+
     public int maxHealth = 3;
     public int health = 3;
 
@@ -25,14 +41,16 @@ public class CharactersInfoes : MonoBehaviour
     {
         manager = GetComponent<GameManager>();
 
-        InitHealth();
+        inventory = new Item[1];
+        inventory[0] = new Item();
 
-        TakeDamage(2);
+        TakeDamage(0);
     }
 
     private void Update()
     {
-        moneyTxt.text = " : " + moneyCount;
+        moneyTxt.text = " : " + inventory[((int)ItemId.Money)].number;
+        print("health" + health);
     }
 
     private void InitHealth()
@@ -54,14 +72,16 @@ public class CharactersInfoes : MonoBehaviour
         /// reafficher les degat
         for(int i = 0; i < maxHealth; i++)
         {
-            if (i > health)
-            {
-                hearthObj[i].SetActive(true);
-            }
-            else
-            {
-                hearthObj[i].SetActive(false);
-            }
+            bool _state = i > health ? true : false;
+
+            hearthObj[i].SetActive(_state);
         }
     }
+
+    public static void AddItem(ItemId _id, int _number)
+    {
+        inventory[((int)_id)].number += _number;
+    }
 }
+
+
